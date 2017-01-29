@@ -13,7 +13,8 @@ instance Show Expr where
   
 valid :: Op -> Int -> Int -> Bool
 valid Add _ _ = True -- always true
-valid Sub x y = x > y -- do not allow for negative integersvalid Mul _ _ = True -- always valid
+valid Sub x y = x > y -- do not allow for negative integers 
+valid Mul _ _ = True -- always valid
 valid Div x y = mod x y == 0 -- integer division only
 
 
