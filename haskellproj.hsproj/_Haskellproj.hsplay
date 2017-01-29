@@ -1,0 +1,9 @@
+-- Haskell Playground 1.0
+show Add
+show 12
+show $ 12+5
+
+valid Add 12 9
+valid Div 50 5
+valid Div 50 6
+
