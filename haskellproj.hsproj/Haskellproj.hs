@@ -28,3 +28,7 @@ eval (App Sub x y) = eval x - eval y
 eval (App Mul x y) = eval x * eval y
 eval (App Div x y) = quot (eval x) (eval y) -- Should not be used with mod a b != 0
 
+subsets :: [Int] -> [[Int]]
+subsets []  = [[]]
+subsets (x:xs) = subsets xs ++ map (x:) (subsets xs)
+

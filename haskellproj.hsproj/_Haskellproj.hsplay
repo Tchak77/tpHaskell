@@ -16,3 +16,8 @@ show x
 let array = [1,2,3,4,5]
 
 eval x
+
+let subsetsArray = subsets array
+length subsetsArray
+2^(length array)
+
