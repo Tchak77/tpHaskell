@@ -18,10 +18,6 @@ valid Mul _ _ = True -- always valid
 valid Div x y = mod x y == 0 -- integer division only
 
 
-
-
-
-  
 values :: Expr -> [Int]
 values (Val n) = [n]
 values (App _ l r) = values l ++ values r
