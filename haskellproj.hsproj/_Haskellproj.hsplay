@@ -8,7 +8,11 @@ valid Div 50 5
 valid Div 50 6
 
 values (Val 6)
-let x = App Add (Val 6) (Val 6)
+let x = App Div (Val 6) (Val 6)
 
 values x
 show x
+
+let array = [1,2,3,4,5]
+
+eval x

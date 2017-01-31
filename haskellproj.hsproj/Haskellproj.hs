@@ -17,10 +17,14 @@ valid Sub x y = x > y -- do not allow for negative integers
 valid Mul _ _ = True -- always valid
 valid Div x y = mod x y == 0 -- integer division only
 
-
 values :: Expr -> [Int]
 values (Val n) = [n]
 values (App _ l r) = values l ++ values r
 
-
+eval :: Expr -> Int
+eval (Val n) = n 
+eval (App Add x y) = eval x + eval y
+eval (App Sub x y) = eval x - eval y
+eval (App Mul x y) = eval x * eval y
+eval (App Div x y) = quot (eval x) (eval y) -- Should not be used with mod a b != 0
 
