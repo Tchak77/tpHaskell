@@ -32,3 +32,26 @@ subsets :: [Int] -> [[Int]]
 subsets []  = [[]]
 subsets (x:xs) = subsets xs ++ map (x:) (subsets xs)
 
+makeExpr :: Expr -> Op -> Int -> Expr
+makeExpr exp op n = App op exp (Val n) 
+
+-- Just looking for this array with all values used
+solutionSingleArray :: [Int] -> Int -> Maybe Expr
+solutionSingleArray x n = Nothing --TODO
+
+-- Looking for all the subsets arrays with all values used
+solutionSubsets :: [[Int]] -> Int -> [Maybe Expr]
+solutionSubsets [] n = [Nothing]
+solutionSubsets [[]] n = [Nothing]
+solutionSubsets (x:xs) n = solutionSingleArray x n : solutionSubsets xs n -- We add the first array answer then recursivly we add the others
+
+-- Checking for the first Expr validating, else Nothing
+checkForExpr :: [Maybe Expr] -> Maybe Expr
+checkForExpr [] = Nothing
+checkForExpr (x:xs) = case x of 
+                      Nothing -> checkForExpr xs
+                      Just value -> Just value
+
+-- The end-to-end function
+solution :: [Int] -> Int -> Maybe Expr
+solution [] n = Nothing

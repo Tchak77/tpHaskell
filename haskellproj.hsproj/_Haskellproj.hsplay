@@ -13,11 +13,26 @@ let x = App Div (Val 6) (Val 6)
 values x
 show x
 
-let array = [1,2,3,4,5]
+
+
+
+
+
+
+
+
 
 eval x
 
+
+
+
+
+let array = [1,2,3,4,5,6,7,8]
+2^(length array)
 let subsetsArray = subsets array
 length subsetsArray
-2^(length array)
 
+
+show (makeExpr x Add 2)
+show (makeExpr (Val 2) Add 4)
