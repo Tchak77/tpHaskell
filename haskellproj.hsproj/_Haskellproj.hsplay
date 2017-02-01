@@ -1,38 +1,31 @@
 -- Haskell Playground 1.0
-show Add
-show 12
-show $ 12+5
-
-valid Add 12 9
-valid Div 50 5
-valid Div 50 6
-
-values (Val 6)
-let x = App Div (Val 6) (Val 6)
-
+let x = App Sub (Val 12) (Val 6)
+x
 values x
-show x
-
-
-
-
-
-
-
-
-
-
 eval x
 
+let array = [2,3,4]
+let subsetedArray = subsets array
+let permutedArray = permute subsetedArray
 
+length array
+length subsetedArray
+length permutedArray
 
+x
 
+allOps
+nextExpr x x
 
-let array = [1,2,3,4,5,6,7,8]
-2^(length array)
-let subsetsArray = subsets array
-length subsetsArray
+nextExpr (Val 2) (Val 3)
+solutionSingleArray []
 
+[n | n <- [1,2,3]]
+let a = [(Val 1)]
 
-show (makeExpr x Add 2)
-show (makeExpr (Val 2) Add 4)
+[App Add (Val 3) n | n <- [(Val 1), x] ]
+
+[App Add (x) n | n <- solutionSingleArray [1] ]
+
+solutionSingleArray [1,2,3]
+

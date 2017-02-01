@@ -1,3 +1,17 @@
+-- IMPORTED FROM DATA.LIST SOURCES
+-- | The 'permutations' function returns the list of all permutations of the argument.
+-- > permutations "abc" == ["abc","bac","cba","bca","cab","acb"]
+permutations :: [a] -> [[a]]
+permutations xs0 =  xs0 : perms xs0 []
+  where
+    perms [] _ = []
+    perms (t:ts) is = foldr interleave (perms ts (t:is)) (permutations is)
+      where interleave xs r = let (_,zs) = interleave' id xs r in zs
+            interleave' _ [] r = (ts, r)
+            interleave' f (y:ys) r = let (us,zs) = interleave' (f . (y:)) ys r
+                                     in  (y:us, f (t:y:us) : zs)
+-----------------------------------------------
+
 data Op = Add | Sub | Mul | Div
 data Expr = Val Int | App Op Expr Expr 
 
@@ -21,6 +35,8 @@ values :: Expr -> [Int]
 values (Val n) = [n]
 values (App _ l r) = values l ++ values r
 
+--------
+
 eval :: Expr -> Int
 eval (Val n) = n 
 eval (App Add x y) = eval x + eval y
@@ -28,18 +44,31 @@ eval (App Sub x y) = eval x - eval y
 eval (App Mul x y) = eval x * eval y
 eval (App Div x y) = quot (eval x) (eval y) -- Should not be used with mod a b != 0
 
+-- Returns all the subsets of the array given
 subsets :: [Int] -> [[Int]]
 subsets []  = [[]]
 subsets (x:xs) = subsets xs ++ map (x:) (subsets xs)
 
-makeExpr :: Expr -> Op -> Int -> Expr
-makeExpr exp op n = App op exp (Val n) 
+-- Returns the permutations of all subsets given
+permute :: [[Int]] -> [[Int]]
+permute = concatMap permutations
 
--- Just looking for this array with all values used
-solutionSingleArray :: [Int] -> Int -> Maybe Expr
-solutionSingleArray x n = Nothing --TODO
+-- Create an array with all ops
+allOps :: [Op]
+allOps = [Add,Sub,Mul,Div]
+
+-- Create new expr
+nextExpr :: Expr -> Expr -> [Expr]
+nextExpr a b = [App o a b | o <- allOps]
+
+-- Just looking for this array with all values used without permutations
+solutionSingleArray :: [Int] -> [Expr]
+solutionSingleArray [] = []
+solutionSingleArray [x] = [(Val x)]
+solutionSingleArray (x:xs) = [ exp | n <- solutionSingleArray xs, exp <- nextExpr (Val x) n] 
 
 -- Looking for all the subsets arrays with all values used
+-- For each array, calculate the Maybe Expr
 solutionSubsets :: [[Int]] -> Int -> [Maybe Expr]
 solutionSubsets [] n = [Nothing]
 solutionSubsets [[]] n = [Nothing]
@@ -55,3 +84,13 @@ checkForExpr (x:xs) = case x of
 -- The end-to-end function
 solution :: [Int] -> Int -> Maybe Expr
 solution [] n = Nothing
+
+
+
+
+
+
+
+
+
+
