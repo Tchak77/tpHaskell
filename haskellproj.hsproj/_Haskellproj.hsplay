@@ -18,14 +18,22 @@ allOps
 nextExpr x x
 
 nextExpr (Val 2) (Val 3)
-solutionSingleArray []
 
 [n | n <- [1,2,3]]
 let a = [(Val 1)]
 
 [App Add (Val 3) n | n <- [(Val 1), x] ]
 
-[App Add (x) n | n <- solutionSingleArray [1] ]
+[App Add (x) n | n <- exprFromArray [1] ]
 
-solutionSingleArray [1,2,3]
+exprFromArray [1,2,3]
 
+let ints = [1,3]
+concatMap exprFromArray (permute (subsets ints))
+
+let e = constructAllExprFromArray ints
+
+length e
+length (filterValid e)
+
+getFirstExprEvaluated (filterValid e) 831 

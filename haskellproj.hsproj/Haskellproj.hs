@@ -11,7 +11,6 @@ permutations xs0 =  xs0 : perms xs0 []
             interleave' f (y:ys) r = let (us,zs) = interleave' (f . (y:)) ys r
                                      in  (y:us, f (t:y:us) : zs)
 -----------------------------------------------
-
 data Op = Add | Sub | Mul | Div
 data Expr = Val Int | App Op Expr Expr 
 
@@ -34,9 +33,7 @@ valid Div x y = mod x y == 0 -- integer division only
 values :: Expr -> [Int]
 values (Val n) = [n]
 values (App _ l r) = values l ++ values r
-
 --------
-
 eval :: Expr -> Int
 eval (Val n) = n 
 eval (App Add x y) = eval x + eval y
@@ -57,33 +54,42 @@ permute = concatMap permutations
 allOps :: [Op]
 allOps = [Add,Sub,Mul,Div]
 
--- Create new expr
+-- Create new expressions with all op (does not care about valid or not)
 nextExpr :: Expr -> Expr -> [Expr]
 nextExpr a b = [App o a b | o <- allOps]
 
 -- Just looking for this array with all values used without permutations
-solutionSingleArray :: [Int] -> [Expr]
-solutionSingleArray [] = []
-solutionSingleArray [x] = [(Val x)]
-solutionSingleArray (x:xs) = [ exp | n <- solutionSingleArray xs, exp <- nextExpr (Val x) n] 
+exprFromArray :: [Int] -> [Expr]
+exprFromArray [] = []
+exprFromArray [x] = [(Val x)]
+exprFromArray (x:xs) = [ exp | n <- exprFromArray xs, exp <- nextExpr (Val x) n] 
 
--- Looking for all the subsets arrays with all values used
--- For each array, calculate the Maybe Expr
-solutionSubsets :: [[Int]] -> Int -> [Maybe Expr]
-solutionSubsets [] n = [Nothing]
-solutionSubsets [[]] n = [Nothing]
-solutionSubsets (x:xs) n = solutionSingleArray x n : solutionSubsets xs n -- We add the first array answer then recursivly we add the others
+-- Create all the possible exp from an array of int (with subsets and permutations)
+constructAllExprFromArray :: [Int] -> [Expr]
+constructAllExprFromArray [] = []
+constructAllExprFromArray x = concatMap exprFromArray (permute (subsets x)) -- concatenation of all the expressions possible for every permutation over every subset.
 
--- Checking for the first Expr validating, else Nothing
-checkForExpr :: [Maybe Expr] -> Maybe Expr
-checkForExpr [] = Nothing
-checkForExpr (x:xs) = case x of 
-                      Nothing -> checkForExpr xs
-                      Just value -> Just value
+-- Tells if an expression is valid recursivly
+isValidExpr :: Expr -> Bool
+isValidExpr (Val n) = True
+isValidExpr (App op a b) = isValidExpr a && isValidExpr b && valid op (eval a) (eval b) -- If the 2 Expressions are valid, we can test the validity on this one
+
+-- Filter on the only valid expressions
+filterValid = filter isValidExpr
+
+-- Returns the first Expression equals to the int given, or Nothing
+getFirstExprEvaluated :: [Expr] -> Int -> Maybe Expr
+getFirstExprEvaluated [] _ = Nothing
+getFirstExprEvaluated (x:xs) n 
+                           | eval x == n = Just x -- Here x MUST be evaluable (with filter) !
+                           | otherwise = getFirstExprEvaluated xs n -- Else continue
 
 -- The end-to-end function
 solution :: [Int] -> Int -> Maybe Expr
 solution [] n = Nothing
+solution x n = getFirstExprEvaluated (filterValid (constructAllExprFromArray x)) n -- Gets the first expression evaluated with the int given on all the expressions validated over all the expressions possible
+
+
 
 
 
