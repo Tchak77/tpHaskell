@@ -1,3 +1,7 @@
+-- MIGNON Frédéric, TCHAKMAKDJIAN Kévin
+-- IR3, Grp1
+---------------------------------------
+
 -- IMPORTED FROM DATA.LIST SOURCES
 -- | The 'permutations' function returns the list of all permutations of the argument.
 -- > permutations "abc" == ["abc","bac","cba","bca","cab","acb"]
@@ -10,7 +14,9 @@ permutations xs0 =  xs0 : perms xs0 []
             interleave' _ [] r = (ts, r)
             interleave' f (y:ys) r = let (us,zs) = interleave' (f . (y:)) ys r
                                      in  (y:us, f (t:y:us) : zs)
+
 ---------------------------------------------------
+
 data Op = Add | Sub | Mul | Div
 data Expr = Val Int | App Op Expr Expr 
 
@@ -33,7 +39,9 @@ valid Div x y = mod x y == 0 -- integer division only
 values :: Expr -> [Int]
 values (Val n) = [n]
 values (App _ l r) = values l ++ values r
+
 ---------------------------------------------------
+
 -- Returns the result of an expression
 eval :: Expr -> Int
 eval (Val n) = n 
